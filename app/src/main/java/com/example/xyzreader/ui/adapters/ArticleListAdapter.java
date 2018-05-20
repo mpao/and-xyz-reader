@@ -1,6 +1,7 @@
 package com.example.xyzreader.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.ui.ImageLoaderHelper;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ViewHolder> {
@@ -49,12 +51,22 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         final String title  = cursor.getString(ArticleLoader.Query.TITLE);
         final String author = cursor.getString(ArticleLoader.Query.AUTHOR);
         final String image  = cursor.getString(ArticleLoader.Query.THUMB_URL);
-        final String date   = cursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
+        final long id       = cursor.getLong(ArticleLoader.Query._ID);
 
         cursor.moveToPosition(position);
 
         holder.titleView.setText(title);
         holder.subtitleView.setText(author);
+        holder.book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        Intent.ACTION_VIEW,
+                        ItemsContract.Items.buildItemUri(id)
+                );
+                context.startActivity(intent);
+            }
+        });
 
         ImageLoader helper = ImageLoaderHelper.getInstance(context).getImageLoader();
         helper.get(image, new ImageLoader.ImageListener() {
@@ -79,17 +91,19 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
+        public View book;
     
         public ViewHolder(View view) {
             super(view);
             thumbnailView = (ImageView) view.findViewById(R.id.thumbnail);
             titleView = (TextView) view.findViewById(R.id.article_title);
             subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            book = view.findViewById(R.id.book);
         }
 
     }

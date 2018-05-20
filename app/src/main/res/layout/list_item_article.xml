@@ -2,11 +2,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/book"
+    android:focusable="true"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginStart="@dimen/default_margin"
     android:layout_marginEnd="@dimen/default_margin">
 
+    <!-- contentDescription is loaded in runtime -->
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
@@ -44,10 +48,7 @@
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view"
-        tools:text="This is a long title, a very long title. It is a veeeery cool book."/>
-
-    <!--  todo: finish -->
-
+        tools:text="This is a long title, a very long title."/>
 
     <TextView
         android:id="@+id/article_subtitle"
@@ -61,7 +62,5 @@
         app:layout_constraintStart_toStartOf="@+id/article_title"
         app:layout_constraintTop_toBottomOf="@+id/article_title"
         tools:text="Author's name"/>
-
-
 
 </android.support.constraint.ConstraintLayout>
