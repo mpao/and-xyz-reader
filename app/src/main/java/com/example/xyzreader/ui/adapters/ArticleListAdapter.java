@@ -48,12 +48,11 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
+        cursor.moveToPosition(position);
         final String title  = cursor.getString(ArticleLoader.Query.TITLE);
         final String author = cursor.getString(ArticleLoader.Query.AUTHOR);
         final String image  = cursor.getString(ArticleLoader.Query.PHOTO_URL);
         final long id       = cursor.getLong(ArticleLoader.Query._ID);
-
-        cursor.moveToPosition(position);
 
         holder.titleView.setText(title);
         holder.subtitleView.setText(author);
