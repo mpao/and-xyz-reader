@@ -50,7 +50,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
 
         final String title  = cursor.getString(ArticleLoader.Query.TITLE);
         final String author = cursor.getString(ArticleLoader.Query.AUTHOR);
-        final String image  = cursor.getString(ArticleLoader.Query.THUMB_URL);
+        final String image  = cursor.getString(ArticleLoader.Query.PHOTO_URL);
         final long id       = cursor.getLong(ArticleLoader.Query._ID);
 
         cursor.moveToPosition(position);
