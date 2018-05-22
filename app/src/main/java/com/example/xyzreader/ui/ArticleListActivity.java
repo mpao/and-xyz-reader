@@ -8,10 +8,12 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.example.xyzreader.R;
@@ -47,10 +49,16 @@ public class ArticleListActivity extends AppCompatActivity implements LoaderMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.theme_accent);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, getString(R.string.add_action_message), Snackbar.LENGTH_LONG).show();
+            }
+        });
+        mRecyclerView = findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
         if (savedInstanceState == null) {
             refresh();
