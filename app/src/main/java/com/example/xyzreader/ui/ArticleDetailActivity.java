@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
@@ -25,6 +25,8 @@ import java.util.Objects;
 public class ArticleDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String ROW_ID = "id";
+    private static final String SCROLL_POS = "scroll_save";
+    private long objId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +47,34 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
 
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getData() != null) {
-                Bundle bundle = new Bundle();
-                bundle.putLong(ROW_ID, ItemsContract.Items.getItemId(getIntent().getData()) );
-                getLoaderManager().initLoader(0, bundle, this);
+                objId = ItemsContract.Items.getItemId(getIntent().getData());
             }
+        }else{
+            objId = savedInstanceState.getLong(ROW_ID);
         }
+        Bundle bundle = new Bundle();
+        bundle.putLong(ROW_ID, objId );
+        getLoaderManager().initLoader(0, bundle, this);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putLong(ROW_ID, objId);
+        outState.putIntArray(SCROLL_POS,
+                new int[]{ findViewById(R.id.mybook).getScrollX(), findViewById(R.id.mybook).getScrollY()}
+                );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if( savedInstanceState.getIntArray(SCROLL_POS) != null) {
+            findViewById(R.id.mybook).scrollTo(
+                    savedInstanceState.getIntArray(SCROLL_POS)[0], savedInstanceState.getIntArray(SCROLL_POS)[1]
+            );
+        }
     }
 
     @Override
@@ -74,11 +98,10 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
             //todo, is this the final layout ? any other info from cursor ?
             // LOOK UP
             TextView tvBody = findViewById(R.id.body);
-            Toolbar toolbar = findViewById(R.id.toolbar);
             final ImageView imageView = findViewById(R.id.image);
 
             // SET VALUES
-            toolbar.setTitle(title);
+            Objects.requireNonNull(getSupportActionBar()).setTitle(title);
             tvBody.setText(body);
             ImageLoader helper = ImageLoaderHelper.getInstance(this).getImageLoader();
             helper.get(image, new ImageLoader.ImageListener() {
