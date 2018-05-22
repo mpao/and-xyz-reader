@@ -4,6 +4,7 @@
     <dimen name="detail_body_text_size">22sp</dimen>
     <dimen name="title_text_size">32sp</dimen>
     <dimen name="author_text_size">18sp</dimen>
+    <dimen name="reading_text_size">18sp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="big_margin">32dp</dimen>

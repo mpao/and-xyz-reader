@@ -9,7 +9,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -27,15 +31,14 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, getString(R.string.share_action_message), Snackbar.LENGTH_LONG).show();
             }
         });
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -62,12 +65,34 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
         if( cursor != null && cursor.moveToFirst() ) {
-            String title  = cursor.getString(ArticleLoader.Query.TITLE);
+            final String title  = cursor.getString(ArticleLoader.Query.TITLE);
             String date   = cursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
             String author = cursor.getString(ArticleLoader.Query.AUTHOR);
             String body   = cursor.getString(ArticleLoader.Query.BODY);
             String image  = cursor.getString(ArticleLoader.Query.PHOTO_URL);
-            ((TextView)findViewById(R.id.body)).setText(body);
+
+            //todo, is this the final layout ? any other info from cursor ?
+            // LOOK UP
+            TextView tvBody = findViewById(R.id.body);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            final ImageView imageView = findViewById(R.id.image);
+
+            // SET VALUES
+            toolbar.setTitle(title);
+            tvBody.setText(body);
+            ImageLoader helper = ImageLoaderHelper.getInstance(this).getImageLoader();
+            helper.get(image, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                    imageView.setImageBitmap(imageContainer.getBitmap());
+                    imageView.setContentDescription(title);
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    //todo network error
+                }
+            });
         }
 
     }
