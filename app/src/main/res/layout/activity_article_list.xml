@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
+        style="@style/AppTheme.xyzAppbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -70,6 +71,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
+        style="@style/AppTheme.xyzFab"
         app:srcCompat="@drawable/ic_add_black_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
